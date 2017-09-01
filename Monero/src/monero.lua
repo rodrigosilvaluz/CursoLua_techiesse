@@ -1,6 +1,6 @@
 
-SU = require "stringUtils"
-IU = require "ioUtils"
+require "ext_libs.stringUtils"
+require "ext_libs.ioUtils"
 
 
 function mprint(...)
@@ -42,29 +42,29 @@ function main(...)
     io.write("Digite o nome do arquivo de entrada: ")
     local nomeArquivoMoedas = io.read()
 
-    local status, conteudo = pcall(IU.readTextFromFile, nomeArquivoMoedas)
+    local status, conteudo = pcall(readTextFromFile, nomeArquivoMoedas)
     if status == false then -- => ocorreu um erro
         print("O arquivo '" .. nomeArquivoMoedas .. "' nao foi encontrado. Execute novamente com um arquivo valido.")
         os.exit(1)
     end
 
-    local linhas = SU.split(conteudo, "\r?\n")
+    local linhas = split(conteudo, "\r?\n")
     table.remove(linhas, 1) -- Removendo linha de cabeçalho
 
     local resultado = {}
     for i, linha in ipairs(linhas) do
 
-        local tbMoeda = SU.split(linha, ";")
+        local tbMoeda = split(linha, ";")
         if tbMoeda[2] ~= nil then
             local moeda =
             {
-                codMoeda = SU.trim(tbMoeda[1]),
-                nome = SU.trim(tbMoeda[2]),
-                simbolo = SU.trim(tbMoeda[3]),
-                codPais = SU.trim(tbMoeda[4]),
-                pais = SU.trim(tbMoeda[5]),
-                tipoMoeda = SU.trim(tbMoeda[6]),
-                dataExclusao = SU.trim(tbMoeda[7]),
+                codMoeda = trim(tbMoeda[1]),
+                nome = trim(tbMoeda[2]),
+                simbolo = trim(tbMoeda[3]),
+                codPais = trim(tbMoeda[4]),
+                pais = trim(tbMoeda[5]),
+                tipoMoeda = trim(tbMoeda[6]),
+                dataExclusao = trim(tbMoeda[7]),
             }
             table.insert(resultado, moeda)
         end
@@ -72,13 +72,13 @@ function main(...)
     end
 
     local nomeArqResultado = string.gsub(nomeArquivoMoedas, "%.%w+$", ".txt")
-    IU.saveTextToFile(toString(resultado), nomeArqResultado)
+    saveTextToFile(toString(resultado), nomeArqResultado)
 
 end
 
 
 function test()
-    local text = IU.readTextFromFile()
+    local text = readTextFromFile()
     print(text)
 end
 

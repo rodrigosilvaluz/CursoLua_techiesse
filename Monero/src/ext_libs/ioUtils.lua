@@ -1,8 +1,6 @@
 
-local ioUtils = {}
 
-
-function ioUtils.readTextFromFile(fileName)
+function readTextFromFile(fileName)
     local file = io.open(fileName, "r")
     if file == nil then
         error("Nao foi possivel abrir o arquivo " .. fileName, 2)
@@ -14,12 +12,9 @@ function ioUtils.readTextFromFile(fileName)
 end
 
 
-function ioUtils.saveTextToFile(text, fileName)
+function saveTextToFile(text, fileName)
     local file = io.open(fileName, "w")
     local res = file:write(text)
     file:close()
     return res
 end
-
-
-return ioUtils

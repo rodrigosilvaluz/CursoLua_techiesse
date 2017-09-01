@@ -1,7 +1,6 @@
 
-local stringUtils = {}
 
-function stringUtils.split(texto, sep)
+function split(texto, sep)
     local partes = {}
 
     local iniParte = 1
@@ -28,11 +27,8 @@ function stringUtils.split(texto, sep)
 end
 
 
-function stringUtils.trim(str)
+function trim(str)
     str = string.gsub(str, "^%s+" , "")
     str = string.gsub(str, "%s+$" , "")
     return str
 end
-
-
-return stringUtils
