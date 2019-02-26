@@ -3,7 +3,7 @@
 function readTextFromFile(fileName)
     local file = io.open(fileName, "r")
     if file == nil then
-        error("Nao foi possivel abrir o arquivo " .. fileName, 2)
+        return nil, "Nao foi possivel abrir o arquivo " .. fileName
     end
 
     local contents = file:read("*a")
