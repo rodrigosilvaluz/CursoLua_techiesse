@@ -16,7 +16,7 @@ function toString(tbMoedas)
 end
 
 
-function coinTable(csvContents)
+function readCoins(csvContents)
     local lines = split(csvContents, "\r?\n")
     table.remove(lines, 1) -- Removendo line de cabeçalho
 
@@ -41,3 +41,30 @@ function coinTable(csvContents)
 
     return coins
 end
+
+
+
+function filterCoinsByCountry(coins, country)
+    local ret = {}
+    for i, coin in ipairs(coins) do
+        if coin.country == country then
+            table.insert(ret, coin)
+        end
+    end
+
+    return ret
+end
+
+
+function filterValidCoins(coins)
+    local ret = {}
+    for i, coin in ipairs(coins) do
+        if #coin.exclusionDate == 0 then
+            table.insert(ret, coin)
+        end
+    end
+
+    return ret
+end
+
+

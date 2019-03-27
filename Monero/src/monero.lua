@@ -21,8 +21,13 @@ function main(...)
             os.exit()
             -- Baixar Arquivo do BC:
         end
-        local coins = coinTable(contents)
-        print(toString(coins))
+        local coins = readCoins(contents)
+        local filteredCoins = filterCoinsByCountry(coins, string.upper(countryName))
+        local validCoins = filterValidCoins(filteredCoins)
+        local code = validCoins[1].coinCode
+
+        print("Codigo: " .. code)
+
     end
 end
 
