@@ -14,12 +14,14 @@ function main(...)
         local countryName = args[2]
         local day = args[3] or os.date("%Y%m%d")
 
-        local inputFileName = COIN_DIR .. "\\" .. "M" .. day .. ".csv"
+        local inputFileName = COIN_DIR .. "\\" .. genCoinTableFileName(day)
         local contents = readTextFromFile(inputFileName)
         if contents == nil then
             print(string.format("Arquivo nao encontrado: %s", inputFileName))
             os.exit()
             -- Baixar Arquivo do BC:
+            downloadCoinTable(day, COIN_DIR)
+            contents = readTextFromFile(inputFileName)
         end
         local coins = readCoins(contents)
         local filteredCoins = filterCoinsByCountry(coins, string.upper(countryName))
@@ -32,3 +34,11 @@ function main(...)
 end
 
 main(...)
+
+
+function test()
+    downloadCoinTable('20190723', 'moedas')
+    downloadQuotationTable('20190723', 'moedas')
+end
+
+-- test()

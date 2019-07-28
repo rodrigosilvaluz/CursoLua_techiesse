@@ -1,4 +1,35 @@
 
+CURL_EXEC = [[C:\Techiesse\Cursos\Lua\code\Monero\bin\curl-7.65.3-win64-mingw\bin\curl]]
+COIN_TABLE_BASE_URL =  [[https://www4.bcb.gov.br/Download/fechamento]]
+function genCoinTableFileName(day)
+    return "M" .. day .. ".csv"
+end
+
+function genQuotationFileName(day)
+    return day .. ".csv"
+end
+
+function downloadCoinTable(day, destDir)
+    local fileName = genCoinTableFileName(day)
+    local url = COIN_TABLE_BASE_URL .. '/' .. fileName
+    downloadFile(url, destDir)
+end
+
+
+function downloadQuotationTable(day, destDir)
+    local fileName = genQuotationFileName(day)
+    local url = COIN_TABLE_BASE_URL .. '/' .. fileName
+    downloadFile(url, destDir)
+end
+
+
+function downloadFile(url, destDir, fileName)
+    fileName = fileName or string.match(url, '/([%w\.]+)$')
+    local downloadCommand = string.format('%s -o %s\\%s %s 2>nul', CURL_EXEC, destDir, fileName, url)
+    os.execute(downloadCommand)
+    --os.execute(CURL_EXEC .. ' -o ' .. destDir .. '\\' .. fileName .. ' ' .. url .. ' 2>nul')
+end
+
 
 function toString(tbMoedas)
     local result = ""
