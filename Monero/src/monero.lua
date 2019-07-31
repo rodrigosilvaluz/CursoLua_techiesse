@@ -17,8 +17,6 @@ function main(...)
         local inputFileName = COIN_DIR .. "\\" .. genCoinTableFileName(day)
         local contents = readTextFromFile(inputFileName)
         if contents == nil then
-            print(string.format("Arquivo nao encontrado: %s", inputFileName))
-            os.exit()
             -- Baixar Arquivo do BC:
             downloadCoinTable(day, COIN_DIR)
             contents = readTextFromFile(inputFileName)
