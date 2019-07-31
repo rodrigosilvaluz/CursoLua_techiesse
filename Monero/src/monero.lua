@@ -31,12 +31,13 @@ function main(...)
     end
 end
 
-main(...)
+-- main(...)
 
 
 function test()
-    downloadCoinTable('20190723', 'moedas')
-    downloadQuotationTable('20190723', 'moedas')
+    local quotationContent = readTextFromFile('moedas\\20190726.csv')
+    local quotations = readQuotationTable(quotationContent)
+    print(showQuotation(quotations[28]))
 end
 
--- test()
+test()

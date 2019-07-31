@@ -99,3 +99,47 @@ function filterValidCoins(coins)
 end
 
 
+function readQuotationTable(quotationTableContent)
+    local quotations = {}
+    local lines = split(trim(quotationTableContent), '\n')
+    for i, line in ipairs(lines) do
+        table.insert(quotations, readQuotation(line))
+    end
+    return quotations
+end
+
+function readQuotation(quotationLine)
+    -- 26/07/2019;005;A;AFN;0,04720000;0,04732000;79,75000000;79,95000000
+    -- Data;Codigo;Tipo;Simbolo;Tx Compra;Tx Venda;P Compra;P Venda
+    local fields = split(quotationLine, ';')
+    local quotation =
+    {
+        coinCode = trim(fields[2]),
+        coinType = trim(fields[3]),
+        coinSymbol = trim(fields[4]),
+        buyRate = bcPriceToNumber(trim(fields[5])),
+        sellRate = bcPriceToNumber(trim(fields[6])),
+        buyParity = bcPriceToNumber(trim(fields[7])),
+        sellParity = bcPriceToNumber(trim(fields[8])),
+    }
+    return quotation
+end
+
+
+function bcPriceToNumber(bcPrice)
+    local cleanedPrice = string.gsub(bcPrice, ',', '.')
+    return tonumber(cleanedPrice)
+    -- return tonumber((string.gsub(bcPrice, ',', '.')))
+end
+
+
+function showQuotation(quotation)
+    return table.concat(
+        {
+            string.format('Moeda: %s (%s)', quotation.coinSymbol ,quotation.coinType),
+            string.format('Taxa     => Compra: %s, Venda: %s', quotation.buyRate, quotation.sellRate),
+            string.format('Paridade => Compra: %s, Venda: %s', quotation.buyParity, quotation.sellParity),
+        },
+        '\n'
+    )
+end
