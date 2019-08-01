@@ -74,7 +74,6 @@ function readCoins(csvContents)
 end
 
 
-
 function filterCoinsByCountry(coins, country)
     local ret = {}
     for i, coin in ipairs(coins) do
@@ -142,4 +141,27 @@ function showQuotation(quotation)
         },
         '\n'
     )
+end
+
+
+function toDollar(amount, srcQuotation)
+    if srcQuotation.coinType == 'A' then
+        return amount / srcQuotation.sellParity
+    else
+        return amount * srcQuotation.sellParity
+    end
+end
+
+
+function fromDollar(amount, destQuotation)
+    if destQuotation.coinType == 'A' then
+        return amount * destQuotation.sellParity
+    else
+        return amount / destQuotation.sellParity
+    end
+end
+
+
+function convert(amount, srcQuotation, destQuotation)
+    return fromDollar(toDollar(amount, srcQuotation), destQuotation)
 end
