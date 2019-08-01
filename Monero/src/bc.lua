@@ -102,7 +102,8 @@ function readQuotationTable(quotationTableContent)
     local quotations = {}
     local lines = split(trim(quotationTableContent), '\n')
     for i, line in ipairs(lines) do
-        table.insert(quotations, readQuotation(line))
+        local quotation = readQuotation(line)
+        quotations[quotation.coinSymbol] = quotation
     end
     return quotations
 end
