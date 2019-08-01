@@ -2,7 +2,6 @@
 require "ext_libs.stringUtils"
 require "ext_libs.ioUtils"
 
-require "bc"
 require "util"
 
 local cmd = require "commands"
@@ -24,7 +23,8 @@ end
 
 main(...)
 
-
+--##############################################################################
+require "bc"
 function test()
     local quotationContent = readTextFromFile('moedas\\20190726.csv')
     local quotations = readQuotationTable(quotationContent)

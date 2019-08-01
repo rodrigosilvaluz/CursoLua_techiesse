@@ -1,3 +1,5 @@
+require "bc"
+
 local commands = {}
 
 function commands.busca(args)
