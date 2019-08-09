@@ -144,8 +144,13 @@ function showQuotation(quotation)
     )
 end
 
+REAL_SYMBOL = 'BRL'
+function toDollar(qt, amount, coinSymbol)
+    if coinSymbol == REAL_SYMBOL then
+        return amount / qt.USD.sellRate
+    end
 
-function toDollar(amount, srcQuotation)
+    local srcQuotation= qt[coinSymbol]
     if srcQuotation.coinType == 'A' then
         return amount / srcQuotation.sellParity
     else
@@ -154,7 +159,12 @@ function toDollar(amount, srcQuotation)
 end
 
 
-function fromDollar(amount, destQuotation)
+function fromDollar(qt, amount, coinSymbol)
+    if coinSymbol == REAL_SYMBOL then
+        return amount * qt.USD.sellRate
+    end
+
+    local destQuotation = qt[coinSymbol]
     if destQuotation.coinType == 'A' then
         return amount * destQuotation.sellParity
     else
@@ -163,6 +173,6 @@ function fromDollar(amount, destQuotation)
 end
 
 
-function convert(amount, srcQuotation, destQuotation)
-    return fromDollar(toDollar(amount, srcQuotation), destQuotation)
+function convert(qt, amount, srcQuotation, destQuotation)
+    return fromDollar(qt, toDollar(qt, amount, srcQuotation), destQuotation)
 end

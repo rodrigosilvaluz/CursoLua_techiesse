@@ -43,21 +43,21 @@ function commands.converter(args)
 
     -- Obter cotações da moeda de origem e da moeda de destino (usar o simbolo)
     local srcQuotation = quotations[srcCoinSymbol]
-    if srcQuotation == nil then
+    if srcQuotation == nil and srcCoinSymbol ~= REAL_SYMBOL then
         print('Cotacao de origem nao encontrada. Simbolo: ' .. srcCoinSymbol)
         os.exit(1)
     end
     local destQuotation = quotations[destCoinSymbol]
-    if destQuotation == nil then
+    if destQuotation == nil and destCoinSymbol ~= REAL_SYMBOL  then
         print('Cotacao de destino nao encontrada. Simbolo: ' .. destCoinSymbol)
         os.exit(1)
     end
 
     -- Realizar a conversão
-    local convertedAmount = convert(amount, srcQuotation, destQuotation)
+    local convertedAmount = convert(quotations, amount, srcCoinSymbol, destCoinSymbol)
 
     -- Exibir o resultado
-    print(string.format('%s %s = %s %s', amount, srcQuotation.coinSymbol, convertedAmount, destQuotation.coinSymbol))
+    print(string.format('%s %s = %s %s', amount, srcCoinSymbol, convertedAmount, destCoinSymbol))
 end
 
 return commands
