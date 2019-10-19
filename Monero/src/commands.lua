@@ -22,8 +22,8 @@ function commands.busca(args)
 
     -- Obter moeda do arquivo de moedas:
     local coins = readCoins(contents)
-    local filteredCoins = filterCoinsByCountry(coins, string.upper(countryName))
-    local validCoins = filterValidCoins(filteredCoins)
+    local filteredCoins = filterCoins(byCountry(string.upper(countryName)), coins)
+    local validCoins = filterCoins(byValidCoin, filteredCoins)
     local code = validCoins[1].coinCode
 
     -- Exibir o resultado:

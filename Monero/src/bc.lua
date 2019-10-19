@@ -86,22 +86,23 @@ function readCoins(csvContents)
 end
 
 
-function filterCoinsByCountry(coins, country)
-    local ret = {}
-    for i, coin in ipairs(coins) do
-        if coin.country == country then
-            table.insert(ret, coin)
-        end
+function byCountry(country)
+    function by(coin)
+        return coin.country == country
     end
-
-    return ret
+    return by
 end
 
 
-function filterValidCoins(coins)
+function byValidCoin(coin)
+    return #coin.exclusionDate == 0
+end
+
+
+function filterCoins(by, coins)
     local ret = {}
     for i, coin in ipairs(coins) do
-        if #coin.exclusionDate == 0 then
+        if by(coin) then
             table.insert(ret, coin)
         end
     end
