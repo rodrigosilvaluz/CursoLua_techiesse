@@ -1,38 +1,50 @@
-
+-- TODO: [Modularização]: Colocar essas constantes em um módilo próprio (config.lua ?)
 CURL_EXEC = [[C:\Techiesse\Cursos\Lua\code\Monero\bin\curl-7.65.3-win64-mingw\bin\curl]]
 COIN_TABLE_BASE_URL =  [[https://www4.bcb.gov.br/Download/fechamento]]
+
+
 function genCoinTableFileName(day)
     return "M" .. day .. ".csv"
 end
+
 
 function genQuotationFileName(day)
     return day .. ".csv"
 end
 
+
 function downloadCoinTable(day, destDir)
     local fileName = genCoinTableFileName(day)
     local url = COIN_TABLE_BASE_URL .. '/' .. fileName
-    downloadFile(url, destDir)
+    return downloadFile(url, destDir)
 end
 
 
 function downloadQuotationTable(day, destDir)
     local fileName = genQuotationFileName(day)
     local url = COIN_TABLE_BASE_URL .. '/' .. fileName
-    downloadFile(url, destDir)
+    return downloadFile(url, destDir)
 end
 
 
+-- TODO: [Modularização]: Esta função é genérica e deve estar em outro módulo (ioUtils.lua ?)
 function downloadFile(url, destDir, fileName)
     fileName = fileName or string.match(url, '/([%w\.]+)$')
-    local downloadCommand = string.format('%s -o %s\\%s %s 2>nul', CURL_EXEC, destDir, fileName, url)
-    os.execute(downloadCommand)
-    --os.execute(CURL_EXEC .. ' -o ' .. destDir .. '\\' .. fileName .. ' ' .. url .. ' 2>nul')
+    local downloadCommand = string.format('%s -f -w \'%%{http_code}\' -o %s\\%s %s 2> nul', CURL_EXEC, destDir, fileName, url)
+    local cmdHandle = io.popen(downloadCommand)
+    local res = cmdHandle:read('*a')
+    local statusCode = tonumber(string.match(res, "'(%d+)'"))
+    -- TODO: [Legibilidade] Criar predicado para o teste abaixo:
+    if not (statusCode >= 200 and statusCode < 300) then
+        error(statusCode, 2)
+    end
+    return statusCode
 end
 
 
 function toString(tbMoedas)
     local result = ""
+    -- TODO: [Boas Práticas Lua]: usar table.concat abaixo:
     for i, coin in ipairs(tbMoedas) do
         result = result .. "Cod coin: " .. (coin.coinCode or "") .. "\n"
         result = result .. "Nome: " .. (coin.name or "") .. "\n"
@@ -49,7 +61,7 @@ end
 
 function readCoins(csvContents)
     local lines = split(csvContents, "\r?\n")
-    table.remove(lines, 1) -- Removendo line de cabeçalho
+    table.remove(lines, 1) -- Removendo linha de cabeçalho
 
     local coins = {}
     for i, line in ipairs(lines) do

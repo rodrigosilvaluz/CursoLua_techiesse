@@ -4,20 +4,29 @@ local commands = {}
 
 function commands.busca(args)
     local countryName = args[1]
-    local day = args[2] or os.date("%Y%m%d")
+    local dateStr = args[2] or os.date("%Y%m%d")
 
-    local inputFileName = COIN_DIR .. "\\" .. genCoinTableFileName(day)
+    -- Tentar abrir tabela de moedas:
+    local inputFileName = COIN_DIR .. "\\" .. genCoinTableFileName(dateStr)
     local contents = readTextFromFile(inputFileName)
     if contents == nil then
         -- Baixar Arquivo do BC:
-        downloadCoinTable(day, COIN_DIR)
+        print('Informacao nao encontrada. Baixando novo arquivo do BC ...')
+        local downloadOk, statusCode = pcall(downloadCoinTable, dateStr, COIN_DIR)
+        if not downloadOk then
+            print('Nao foi possivel baixar o arquivo de moedas. Erro: ' .. statusCode)
+            os.exit(1)
+        end
         contents = readTextFromFile(inputFileName)
     end
+
+    -- Obter moeda do arquivo de moedas:
     local coins = readCoins(contents)
     local filteredCoins = filterCoinsByCountry(coins, string.upper(countryName))
     local validCoins = filterValidCoins(filteredCoins)
     local code = validCoins[1].coinCode
 
+    -- Exibir o resultado:
     print("Codigo: " .. code .. " - Simbolo: " .. validCoins[1].symbol)
 end
 
@@ -26,15 +35,19 @@ function commands.converter(args)
     local amount = tonumber(args[1])
     local srcCoinSymbol = string.upper(args[2])
     local destCoinSymbol = string.upper(args[3])
-    local dateStr = args[4] --or os.date("%Y%m%d")
+    local dateStr = args[4] or os.date("%Y%m%d")
 
     -- Tentar abrir o arquivo de cotações
     local inputFileName = COIN_DIR .. "\\" .. genQuotationFileName(dateStr)
     local contents = readTextFromFile(inputFileName)
-    -- Se não existir baixar um novo
     if contents == nil then
         -- Baixar Arquivo do BC:
-        downloadQuotationTable(day, COIN_DIR)
+        print('Informacao nao encontrada. Baixando novo arquivo do BC ...')
+        local downloadOk, statusCode = pcall(downloadQuotationTable, dateStr, COIN_DIR)
+        if not downloadOk then
+            print('Nao foi possivel baixar o arquivo de cotacao. Erro: ' .. statusCode)
+            os.exit(1)
+        end
         contents = readTextFromFile(inputFileName)
     end
 
