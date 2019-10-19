@@ -58,7 +58,12 @@ end
 -- TODO: [Modularização]: Esta função é genérica e deve estar em outro módulo (ioUtils.lua ?)
 function downloadFile(url, destDir, fileName)
     fileName = fileName or string.match(url, '/([%w\.]+)$')
-    local downloadCommand = string.format('%s -f -w \'%%{http_code}\' -o %s\\%s %s 2> nul', CURL_EXEC, destDir, fileName, url)
+    local downloadCommand = string.format(
+        '%s -f -w \'%%{http_code}\' -o %s %s 2> nul',
+        CURL_EXEC,
+        path.join(destDir, fileName),
+        url
+    )
     local cmdHandle = io.popen(downloadCommand)
     local res = cmdHandle:read('*a')
     local statusCode = tonumber(string.match(res, "'(%d+)'"))

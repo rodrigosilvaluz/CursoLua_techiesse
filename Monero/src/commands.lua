@@ -1,4 +1,5 @@
 require "bc"
+local path = require "ext_libs.path"
 
 local commands = {}
 
@@ -7,7 +8,7 @@ function commands.busca(args)
     local dateStr = args[2] or os.date("%Y%m%d")
 
     -- Tentar abrir tabela de moedas:
-    local inputFileName = COIN_DIR .. "\\" .. genCoinTableFileName(dateStr)
+    local inputFileName = path.join(COIN_DIR, genCoinTableFileName(dateStr))
     local contents = readTextFromFile(inputFileName)
     if contents == nil then
         -- Baixar Arquivo do BC:
@@ -38,7 +39,7 @@ function commands.converter(args)
     local dateStr = args[4] or os.date("%Y%m%d")
 
     -- Tentar abrir o arquivo de cotações
-    local inputFileName = COIN_DIR .. "\\" .. genQuotationFileName(dateStr)
+    local inputFileName = path.join(COIN_DIR, genQuotationFileName(dateStr))
     local contents = readTextFromFile(inputFileName)
     if contents == nil then
         -- Baixar Arquivo do BC:

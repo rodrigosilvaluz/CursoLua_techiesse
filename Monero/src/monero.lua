@@ -22,19 +22,3 @@ function main(...)
 end
 
 main(...)
-
---##############################################################################
-require "bc"
-function test()
-    local quotationContent = readTextFromFile('moedas\\20190726.csv')
-    local quotations = readQuotationTable(quotationContent)
-    local afn = quotations[1]
-    local eur = quotations[48]
-    print(showQuotation(afn))
-    print()
-    print(showQuotation(eur))
-    print()
-    print(convert(5, afn, eur))
-end
-
---test()
