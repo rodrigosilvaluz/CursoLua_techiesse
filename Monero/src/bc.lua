@@ -3,6 +3,34 @@ CURL_EXEC = [[C:\Techiesse\Cursos\Lua\code\Monero\bin\curl-7.65.3-win64-mingw\bi
 COIN_TABLE_BASE_URL =  [[https://www4.bcb.gov.br/Download/fechamento]]
 
 
+Coin = {}
+function Coin.new(coinCode, name, symbol, countryCode, country, coinType, exclusionDate)
+    return {
+        coinCode = trim(coinCode),
+        name = trim(name),
+        symbol = trim(symbol),
+        countryCode = trim(countryCode),
+        country = trim(country),
+        coinType = trim(coinType),
+        exclusionDate = trim(exclusionDate),
+    }
+end
+
+
+Quotation = {}
+function Quotation.new(coinCode, coinType, coinSymbol, buyRate, sellRate, buyParity, sellParity)
+    return {
+        coinCode = trim(coinCode),
+        coinType = trim(coinType),
+        coinSymbol = trim(coinSymbol),
+        buyRate = bcPriceToNumber(trim(buyRate)),
+        sellRate = bcPriceToNumber(trim(sellRate)),
+        buyParity = bcPriceToNumber(trim(buyParity)),
+        sellParity = bcPriceToNumber(trim(sellParity)),
+    }
+end
+
+
 function genCoinTableFileName(day)
     return "M" .. day .. ".csv"
 end
@@ -68,16 +96,18 @@ function readCoins(csvContents)
 
         local coinFields = split(line, ";")
         if coinFields[2] ~= nil then
-            local coin =
-            {
-                coinCode = trim(coinFields[1]),
-                name = trim(coinFields[2]),
-                symbol = trim(coinFields[3]),
-                countryCode = trim(coinFields[4]),
-                country = trim(coinFields[5]),
-                coinType = trim(coinFields[6]),
-                exclusionDate = trim(coinFields[7]),
-            }
+            local coin = Coin.new(unpack(coinFields))
+            -- O código acima é equivalente a:
+            -- local coin = Coin.new(
+            --     coinFields[1],
+            --     coinFields[2],
+            --     coinFields[3],
+            --     coinFields[4],
+            --     coinFields[5],
+            --     coinFields[6],
+            --     coinFields[7],
+            -- )
+
             table.insert(coins, coin)
         end
     end
@@ -125,16 +155,17 @@ function readQuotation(quotationLine)
     -- 26/07/2019;005;A;AFN;0,04720000;0,04732000;79,75000000;79,95000000
     -- Data;Codigo;Tipo;Simbolo;Tx Compra;Tx Venda;P Compra;P Venda
     local fields = split(quotationLine, ';')
-    local quotation =
-    {
-        coinCode = trim(fields[2]),
-        coinType = trim(fields[3]),
-        coinSymbol = trim(fields[4]),
-        buyRate = bcPriceToNumber(trim(fields[5])),
-        sellRate = bcPriceToNumber(trim(fields[6])),
-        buyParity = bcPriceToNumber(trim(fields[7])),
-        sellParity = bcPriceToNumber(trim(fields[8])),
-    }
+    local quotation = Quotation.new(select(2, unpack(fields)))
+    -- O código acima é equivalente a:
+    --local quotation = Quotation.new(
+    --    fields[2],
+    --    fields[3],
+    --    fields[4],
+    --    fields[5],
+    --    fields[6],
+    --    fields[7],
+    --    fields[8]
+    --)
     return quotation
 end
 
@@ -142,7 +173,6 @@ end
 function bcPriceToNumber(bcPrice)
     local cleanedPrice = string.gsub(bcPrice, ',', '.')
     return tonumber(cleanedPrice)
-    -- return tonumber((string.gsub(bcPrice, ',', '.')))
 end
 
 
