@@ -97,17 +97,6 @@ function readCoins(csvContents)
         local coinFields = split(line, ";")
         if coinFields[2] ~= nil then
             local coin = Coin.new(unpack(coinFields))
-            -- O código acima é equivalente a:
-            -- local coin = Coin.new(
-            --     coinFields[1],
-            --     coinFields[2],
-            --     coinFields[3],
-            --     coinFields[4],
-            --     coinFields[5],
-            --     coinFields[6],
-            --     coinFields[7],
-            -- )
-
             table.insert(coins, coin)
         end
     end
@@ -156,16 +145,6 @@ function readQuotation(quotationLine)
     -- Data;Codigo;Tipo;Simbolo;Tx Compra;Tx Venda;P Compra;P Venda
     local fields = split(quotationLine, ';')
     local quotation = Quotation.new(select(2, unpack(fields)))
-    -- O código acima é equivalente a:
-    --local quotation = Quotation.new(
-    --    fields[2],
-    --    fields[3],
-    --    fields[4],
-    --    fields[5],
-    --    fields[6],
-    --    fields[7],
-    --    fields[8]
-    --)
     return quotation
 end
 
