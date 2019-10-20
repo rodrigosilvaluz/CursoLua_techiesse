@@ -1,3 +1,6 @@
+local path = require "ext_libs.path"
+local plat = require "plat"
+
 -- TODO: [Modularização]: Colocar essas constantes em um módilo próprio (config.lua ?)
 CURL_EXEC = [[C:\Techiesse\Cursos\Lua\code\Monero\bin\curl-7.65.3-win64-mingw\bin\curl]]
 COIN_TABLE_BASE_URL =  [[https://www4.bcb.gov.br/Download/fechamento]]
@@ -59,10 +62,11 @@ end
 function downloadFile(url, destDir, fileName)
     fileName = fileName or string.match(url, '/([%w\.]+)$')
     local downloadCommand = string.format(
-        '%s -f -w \'%%{http_code}\' -o %s %s 2> nul',
+        '%s -f -w \'%%{http_code}\' -o %s %s 2> %s',
         CURL_EXEC,
         path.join(destDir, fileName),
-        url
+        url,
+        plat.getParam('NULL_DEV')
     )
     local cmdHandle = io.popen(downloadCommand)
     local res = cmdHandle:read('*a')
