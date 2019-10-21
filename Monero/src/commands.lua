@@ -16,7 +16,7 @@ function cleanCountryName(countryName)
     return clean(
         countryName,
         countryNameValidators,
-        trim,
+        function(val) return string.upper(trim(val)) end,
         string.format('O nome do pais %s nao eh valido', countryName)
     )
 
@@ -92,12 +92,17 @@ function commands.busca(args)
 
     -- Obter moeda do arquivo de moedas:
     local coins = readCoins(contents)
-    local filteredCoins = filterCoins(byCountry(string.upper(countryName)), coins)
-    local validCoins = filterCoins(byValidCoin, filteredCoins)
-    local code = validCoins[1].coinCode
+    local filteredCoins = filterCoins(byCountry(countryName), coins)
+    if #filteredCoins == 0 then
+        print(string.format('O pais %s nao foi encontrado na tabela de moedas', countryName))
+        os.exit(1)
+    end
+
+    local activeCoins = filterCoins(byActiveCoin, filteredCoins)
+    local coin = activeCoins[1]
 
     -- Exibir o resultado:
-    print("Codigo: " .. code .. " - Simbolo: " .. validCoins[1].symbol)
+    print("Codigo: " .. coin.code .. " - Simbolo: " .. coin.symbol)
 end
 
 

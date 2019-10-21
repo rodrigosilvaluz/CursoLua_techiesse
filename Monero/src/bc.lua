@@ -7,9 +7,9 @@ COIN_TABLE_BASE_URL =  [[https://www4.bcb.gov.br/Download/fechamento]]
 
 
 Coin = {}
-function Coin.new(coinCode, name, symbol, countryCode, country, coinType, exclusionDate)
+function Coin.new(code, name, symbol, countryCode, country, coinType, exclusionDate)
     return {
-        coinCode = trim(coinCode),
+        code = trim(code),
         name = trim(name),
         symbol = trim(symbol),
         countryCode = trim(countryCode),
@@ -78,12 +78,13 @@ function downloadFile(url, destDir, fileName)
     return statusCode
 end
 
+
 -- TODO: [Legibilidade]: Dar um nome mais significativo para esta função:
 function toString(tbMoedas)
     local result = ""
     -- TODO: [Boas Práticas Lua]: usar table.concat abaixo:
     for i, coin in ipairs(tbMoedas) do
-        result = result .. "Cod coin: " .. (coin.coinCode or "") .. "\n"
+        result = result .. "Cod coin: " .. (coin.code or "") .. "\n"
         result = result .. "Nome: " .. (coin.name or "") .. "\n"
         result = result .. "Simbolo: " .. (coin.symbol or "") .. "\n"
         result = result .. "Cod Pais: " .. (coin.countryCode or "") .. "\n"
@@ -122,7 +123,7 @@ function byCountry(country)
 end
 
 
-function byValidCoin(coin)
+function byActiveCoin(coin)
     return #coin.exclusionDate == 0
 end
 
