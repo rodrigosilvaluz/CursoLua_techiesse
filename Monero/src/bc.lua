@@ -78,7 +78,7 @@ function downloadFile(url, destDir, fileName)
     return statusCode
 end
 
-
+-- TODO: [Legibilidade]: Dar um nome mais significativo para esta função:
 function toString(tbMoedas)
     local result = ""
     -- TODO: [Boas Práticas Lua]: usar table.concat abaixo:
