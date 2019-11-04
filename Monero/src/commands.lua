@@ -1,11 +1,15 @@
 require "bc"
 local path = require "ext_libs.path"
+local validation = require "ext_libs.validation"
+
+local validators = require "validators"
+
 
 local commands = {}
 
 function commands.busca(args)
     local countryName = args[1]
-    local dateStr = args[2] or os.date("%Y%m%d")
+    local dateStr = validation.validate(args[2] or os.date("%Y%m%d"), validators.date)
 
     -- Tentar abrir tabela de moedas:
     local inputFileName = path.join(COIN_DIR, genCoinTableFileName(dateStr))
@@ -33,10 +37,10 @@ end
 
 
 function commands.converter(args)
-    local amount = tonumber(args[1])
-    local srcCoinSymbol = string.upper(args[2])
-    local destCoinSymbol = string.upper(args[3])
-    local dateStr = args[4] or os.date("%Y%m%d")
+    local amount = validation.validate(args[1], validators.number)
+    local srcCoinSymbol = validation.validate(string.upper(args[2]), validators.srcCoinSymbol)
+    local destCoinSymbol = validation.validate(string.upper(args[3]), validators.destCoinSymbol)
+    local dateStr = validation.validate(args[4] or os.date("%Y%m%d"), validators.date)
 
     -- Tentar abrir o arquivo de cotações
     local inputFileName = path.join(COIN_DIR, genQuotationFileName(dateStr))
